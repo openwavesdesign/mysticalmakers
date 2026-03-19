@@ -10,18 +10,37 @@ import heroCrafts from "@/assets/hero-crafts.jpg";
 const Index = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      const response = await fetch(
+        `https://api.kit.com/v4/forms/${import.meta.env.VITE_KIT_FORM_ID}/subscribers`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_KIT_API_KEY}`,
+          },
+          body: JSON.stringify({ email_address: email }),
+        }
+      );
+      if (!response.ok) throw new Error("Subscription failed");
       toast({
         title: "You're on the list! 🎉",
-        description: "We'll let you know about our markets and new creations."
+        description: "We'll let you know about our markets and new creations.",
       });
       setEmail("");
+    } catch {
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 500);
+    }
   };
   return <div className="min-h-screen bg-background">
       <Header />
