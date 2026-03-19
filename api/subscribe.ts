@@ -18,11 +18,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const kitRes = await fetch(
-    `https://api.convertkit.com/v3/forms/${formId}/subscribe`,
+    `https://api.kit.com/v4/forms/${formId}/subscribers`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ api_key: apiKey, email }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({ email_address: email }),
     }
   );
 
