@@ -24,16 +24,19 @@ const Index = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      if (!response.ok) throw new Error("Subscription failed");
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error ?? `HTTP ${response.status}`);
+      }
       toast({
         title: "You're on the list! 🎉",
         description: "We'll let you know about our markets and new creations.",
       });
       setEmail("");
-    } catch {
+    } catch (err) {
       toast({
         title: "Something went wrong",
-        description: "Please try again or contact us directly.",
+        description: err instanceof Error ? err.message : "Please try again.",
         variant: "destructive",
       });
     } finally {
