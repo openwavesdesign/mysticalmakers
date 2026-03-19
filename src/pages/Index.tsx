@@ -98,7 +98,7 @@ const Index = () => {
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               Mystical Makers is run by four creative kids: Lydia, Evelyn (aka "Ev the Yarn Dragon"), 
-              Norah, and Hazel. Each one brings their own unique talents—from crochet animals to friendship 
+              Sparrow, and Hazel. Each one brings their own unique talents—from crochet animals to friendship 
               bracelets to finger crochet snakes!
             </p>
             
