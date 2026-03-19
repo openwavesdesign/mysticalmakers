@@ -29,8 +29,8 @@ const Index = () => {
         throw new Error(data.error ?? `HTTP ${response.status}`);
       }
       toast({
-        title: "You're on the list! 🎉",
-        description: "We'll let you know about our markets and new creations.",
+        title: "Almost there!",
+        description: "Check your email and click the confirmation link to complete your subscription.",
       });
       setEmail("");
     } catch (err) {
