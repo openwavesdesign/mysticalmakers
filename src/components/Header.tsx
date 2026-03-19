@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
 import { Sparkles, Menu } from "lucide-react";
-import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,36 +7,55 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 
+const scrollToSection = (id: string) => {
+  if (id === "top") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth" });
+};
+
 const navItems = [
-  { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
-  { to: "/events", label: "Events" },
-  { to: "/contact", label: "Contact" },
+  { id: "top", label: "Home" },
+  { id: "about", label: "About Us" },
+  { id: "crafts", label: "Our Creations" },
 ];
 
 const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="section-container py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        <button
+          onClick={() => scrollToSection("top")}
+          className="flex items-center gap-2"
+        >
           <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-display text-xl font-semibold text-foreground">Mystical Makers</span>
-        </Link>
+          <span className="font-display text-xl font-semibold text-foreground">
+            Mystical Makers
+          </span>
+        </button>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
+            <button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
               className="font-body text-muted-foreground hover:text-primary transition-colors"
-              activeClassName="text-primary font-medium"
             >
               {item.label}
-            </NavLink>
+            </button>
           ))}
+          <Button
+            onClick={() => scrollToSection("newsletter")}
+            variant="hero"
+            size="sm"
+          >
+            Stay Updated
+          </Button>
         </nav>
 
         {/* Mobile Navigation */}
@@ -52,16 +69,24 @@ const Header = () => {
           <SheetContent side="right" className="w-72 bg-background">
             <nav className="flex flex-col gap-4 mt-8">
               {navItems.map((item) => (
-                <SheetClose asChild key={item.to}>
-                  <NavLink
-                    to={item.to}
-                    className="font-display text-lg text-foreground hover:text-primary transition-colors py-2 px-4 rounded-xl hover:bg-secondary"
-                    activeClassName="text-primary bg-primary/10"
+                <SheetClose asChild key={item.id}>
+                  <button
+                    onClick={() => scrollToSection(item.id)}
+                    className="font-display text-lg text-foreground hover:text-primary transition-colors py-2 px-4 rounded-xl hover:bg-secondary text-left"
                   >
                     {item.label}
-                  </NavLink>
+                  </button>
                 </SheetClose>
               ))}
+              <SheetClose asChild>
+                <Button
+                  onClick={() => scrollToSection("newsletter")}
+                  variant="hero"
+                  className="mt-2"
+                >
+                  Stay Updated
+                </Button>
+              </SheetClose>
             </nav>
           </SheetContent>
         </Sheet>
