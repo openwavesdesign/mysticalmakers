@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Sparkles, Heart, Palette, Gift, Star, MessageCircle, Mail, Send } from "lucide-react";
+import { Sparkles, Heart, Palette, Gift, Star, Mail, Send } from "lucide-react";
+
+const scrollToSection = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth" });
+};
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
@@ -10,18 +14,37 @@ import heroCrafts from "@/assets/hero-crafts.jpg";
 const Index = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      const response = await fetch(
+        `https://api.kit.com/v4/forms/${import.meta.env.VITE_KIT_FORM_ID}/subscribers`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_KIT_API_KEY}`,
+          },
+          body: JSON.stringify({ email_address: email }),
+        }
+      );
+      if (!response.ok) throw new Error("Subscription failed");
       toast({
         title: "You're on the list! 🎉",
-        description: "We'll let you know about our markets and new creations."
+        description: "We'll let you know about our markets and new creations.",
       });
       setEmail("");
+    } catch {
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 500);
+    }
   };
   return <div className="min-h-screen bg-background">
       <Header />
@@ -43,18 +66,14 @@ const Index = () => {
                 Fun, colorful, and handmade crafts from Mystical Makers. Each piece is made with imagination, creativity, and lots of heart!
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link to="/about">
-                  <Button variant="hero" size="lg">
-                    <Palette className="w-5 h-5" />
-                    Meet Our Creators
-                  </Button>
-                </Link>
-                <Link to="/contact">
-                  <Button variant="outline" size="lg">
-                    <MessageCircle className="w-5 h-5" />
-                    Custom Request
-                  </Button>
-                </Link>
+                <Button variant="hero" size="lg" onClick={() => scrollToSection("about")}>
+                  <Palette className="w-5 h-5" />
+                  Meet Our Creators
+                </Button>
+                <Button variant="outline" size="lg" onClick={() => scrollToSection("newsletter")}>
+                  <Mail className="w-5 h-5" />
+                  Stay Updated
+                </Button>
               </div>
             </div>
             <div className="relative">
@@ -94,12 +113,10 @@ const Index = () => {
               <div className="w-16 h-16 rounded-full bg-sky/40 flex items-center justify-center text-2xl">🐱</div>
             </div>
 
-            <Link to="/about">
-              <Button variant="hero" size="lg">
-                <Heart className="w-5 h-5" />
-                Meet the Kids
-              </Button>
-            </Link>
+            <Button variant="hero" size="lg" onClick={() => scrollToSection("crafts")}>
+              <Heart className="w-5 h-5" />
+              See Our Creations
+            </Button>
           </div>
         </div>
       </section>
@@ -212,9 +229,9 @@ const Index = () => {
             </div>
             
             <nav className="flex items-center gap-6 text-background/80">
-              <Link to="/about" className="hover:text-accent transition-colors text-sm">About</Link>
-              <Link to="/events" className="hover:text-accent transition-colors text-sm">Events</Link>
-              <Link to="/contact" className="hover:text-accent transition-colors text-sm">Contact</Link>
+              <button onClick={() => scrollToSection("about")} className="hover:text-accent transition-colors text-sm">About Us</button>
+              <button onClick={() => scrollToSection("crafts")} className="hover:text-accent transition-colors text-sm">Our Creations</button>
+              <button onClick={() => scrollToSection("newsletter")} className="hover:text-accent transition-colors text-sm">Stay Updated</button>
             </nav>
           </div>
           
