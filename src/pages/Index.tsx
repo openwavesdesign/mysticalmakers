@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Sparkles, Heart, Palette, Gift, Star, Mail, Send } from "lucide-react";
-
-const scrollToSection = (id: string) => {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth" });
-};
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import heroCrafts from "@/assets/hero-crafts.jpg";
+
+const scrollToSection = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth" });
+};
 
 const Index = () => {
   const [email, setEmail] = useState("");
@@ -19,17 +19,11 @@ const Index = () => {
     if (!email.trim()) return;
     setIsSubmitting(true);
     try {
-      const response = await fetch(
-        `https://api.kit.com/v4/forms/${import.meta.env.VITE_KIT_FORM_ID}/subscribers`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_KIT_API_KEY}`,
-          },
-          body: JSON.stringify({ email_address: email }),
-        }
-      );
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
       if (!response.ok) throw new Error("Subscription failed");
       toast({
         title: "You're on the list! 🎉",
